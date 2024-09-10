@@ -1,4 +1,10 @@
 // A small tool to capture DNS answers
+//
+// gcc -Wall -O2 -o dnsstream dnsstream.c  -lpcap
+//
+// ./dnsstream eth0
+// ./dnsstream file.pcap
+
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <net/ethernet.h>

@@ -14,7 +14,7 @@ jobs:
         arch: [x86_64, aarch64]
     runs-on: ubuntu-latest
     container:
-      image: muslcc/x86_64::${{ matrix.arch }}-linux-musl
+      image: muslcc/x86_64:${{ matrix.arch }}-linux-musl
       options: --user root
     steps:
       - uses: actions/checkout@v3
@@ -25,13 +25,13 @@ jobs:
       
       - name: Compile-${{ matrix.arch }}
         run: |
-          gcc -Wall -O2 -static -o dnsstream dnsstream.c
+          gcc -Wall -O2 -static -o dnsstream dnsstream.c -lpcap
           strip dnsstream
           mv dnsstream dnsstream_linux-${{ matrix.arch }}
       
       - name: Upload to release
         uses: svenstaro/upload-release-action@v2
         with:
-          repo_tokne: $${{ secrets.GITHUB_TOKEN }}
+          repo_token: $${{ secrets.GITHUB_TOKEN }}
           file: dnsstream_linux-${{ matrix.arch }}
           overwrite: true
