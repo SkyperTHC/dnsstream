@@ -30,7 +30,7 @@ jobs:
           mv dnsstream dnsstream_linux-${{ matrix.arch }}
       
       - name: Upload to release
-        uses: svenstrao/upload-release-action@v2
+        uses: svenstaro/upload-release-action@v2
         with:
           repo_tokne: $${{ secrets.GITHUB_TOKEN }}
           file: dnsstream_linux-${{ matrix.arch }}
