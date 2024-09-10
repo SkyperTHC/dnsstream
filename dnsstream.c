@@ -4,6 +4,11 @@
 //
 // ./dnsstream eth0
 // ./dnsstream file.pcap
+//
+// Static Compile:
+// docker run --rm -v$(pwd):/src -it alpine
+// apk add --update --no-cache --no-progress bash make curl tar libpcap-dev musl-dev gcc
+// Then follow steps in static-release-push.yaml
 
 #include <netinet/in.h>
 #include <arpa/inet.h>
