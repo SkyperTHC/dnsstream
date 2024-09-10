@@ -1,0 +1,37 @@
+
+name: Static Release Build
+
+on: [push]
+
+permissions:
+  contents: write
+
+
+jobs:
+  Linux-Cross-Compile:
+    strategy:
+      matrix:
+        arch: [x86_64, aarch64]
+    runs-on: ubuntu-latest
+    container:
+      image: muslcc/x86_64::${{ matric.arch }}-linux-musl
+      options: --user root
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Add build dependencies
+        run: |
+          apk add --update --no-cache --no-progress bash make curl tar
+      
+      - name: Compile-${{ matrix.arch }}
+        run: |
+          gcc -Wall -O2 -static -o dnsstream dnsstream.c
+          strip dnsstream
+          mv dnsstream dnsstream_linux-${{ matrix.arch }}
+      
+      - name: Upload to release
+        uses: svenstrao/upload-release-action@v2
+        with:
+          repo_tokne: $${{ secrets.GITHUB_TOKEN }}
+          file: dnsstream_linux-${{ matrix.arch }}
+          overwrite: true
