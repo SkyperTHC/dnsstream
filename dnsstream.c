@@ -115,8 +115,11 @@ main(int argc, char *argv[]) {
 
     while (1) {
         data = pcap_next(handle, &phdr);
-        if ((data == NULL) && errbuf[0] != '\0')
-            break;
+        if (data == NULL) {
+            if (errbuf[0] != '\0')
+                break;
+            continue; // timeout
+        }
         if (phdr.caplen != phdr.len)
             continue;
         // if (ntohs(eth->ether_type != ETHERNET_IP))
