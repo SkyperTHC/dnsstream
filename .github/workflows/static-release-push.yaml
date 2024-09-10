@@ -21,7 +21,7 @@ jobs:
 
       - name: Add build dependencies
         run: |
-          apk add --update --no-cache --no-progress bash make curl tar
+          apk add --update --no-cache --no-progress bash make curl tar libpcap-dev
       
       - name: Compile-${{ matrix.arch }}
         run: |
