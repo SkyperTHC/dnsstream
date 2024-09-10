@@ -113,7 +113,10 @@ main(int argc, char *argv[]) {
         ERREXIT("setfilter: %s\n", pcap_geterr(handle));
 
 
-    while ((data = pcap_next(handle, &phdr)) != NULL) {
+    while (1) {
+        data = pcap_next(handle, &phdr);
+        if ((data == NULL) && errbuf[0] != '\0')
+            break;
         if (phdr.caplen != phdr.len)
             continue;
         // if (ntohs(eth->ether_type != ETHERNET_IP))
@@ -164,5 +167,4 @@ main(int argc, char *argv[]) {
             printf("%s\t%s\n", qstr, astr);
         }
     }
-    printf("err %s\n", pcap_geterr(handle));
 }
