@@ -1,6 +1,6 @@
 // A small tool to capture DNS answers
 //
-// gcc -Wall -O2 -o dnsstream dnsstream.c  -lpcap
+// gcc -Wall -O2 -o dnsstream dnsstream.c -lpcap
 //
 // ./dnsstream eth0
 // ./dnsstream file.pcap
@@ -8,7 +8,7 @@
 // Static Compile:
 // docker run --rm -v$(pwd):/src -it alpine
 // apk add --update --no-cache --no-progress bash make curl tar libpcap-dev musl-dev gcc
-// Then follow steps in static-release-push.yaml
+// gcc -Wall -O2 -static -o dnsstream dnsstream.c -lpcap
 
 #include <netinet/in.h>
 #include <arpa/inet.h>
