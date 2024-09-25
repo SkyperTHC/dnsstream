@@ -96,10 +96,11 @@ main(int argc, char *argv[]) {
     const uint8_t *ptr;
     struct dns_header *dns;
     struct arr_header *arr;
+    uint16_t flags;
 
-    char *input = "any";
-    if (argc > 1)
-        input = argv[1];
+    if (argc < 2)
+        ERREXIT("dnsstream <DEVICE> [filter='udp and src port 53']\n");
+    char *input = argv[1];
 
     if (strstr(input, ".pcap"))
         handle = pcap_open_offline(input, errbuf);
@@ -109,7 +110,7 @@ main(int argc, char *argv[]) {
     if (handle == NULL)
         ERREXIT("pcap_open(%s): %s\n", input, strerror(errno));
 
-    if (pcap_compile(handle, &filter, FILTER, 0, 0) == -1)
+    if (pcap_compile(handle, &filter, argv[2]?:FILTER, 0, 0) == -1)
         ERREXIT("filter compile: %s\n", pcap_geterr(handle));
 
     if (pcap_setfilter(handle, &filter) < 0)
@@ -132,11 +133,12 @@ main(int argc, char *argv[]) {
         if (ptr + sizeof *dns >= end)
             continue;
         dns = (struct dns_header *)ptr;
-        if (dns->flags >> 15 != 1)
+        flags = ntohs(dns->flags);
+        if (flags >> 15 != 1)
             continue; // response only
-        if (dns->flags & 0x0f != 0)
+        if ((flags & 0x0f) != 0)
             continue; // rCode, 0 => No Error
-        if (((dns->flags >> 8) & 0x01) != 0)
+        if (((flags >> 9) & 0x01) != 0)
             continue; // ignore truncated messages
         if (ntohs(dns->qdcount) != 1)
             continue;
