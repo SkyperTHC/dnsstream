@@ -9,6 +9,9 @@
 // docker run --rm -v$(pwd):/src -it alpine
 // apk add --update --no-cache --no-progress bash make curl tar libpcap-dev musl-dev gcc
 // gcc -Wall -O2 -static -o dnsstream dnsstream.c -lpcap
+//
+// See also:
+// https://www.geeksforgeeks.org/dns-message-format/
 
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -131,6 +134,8 @@ main(int argc, char *argv[]) {
         dns = (struct dns_header *)ptr;
         if (dns->flags >> 15 != 1)
             continue; // response only
+        if (dns->flags & 0x0f != 0)
+            continue; // rCode, 0 => No Error
         if (((dns->flags >> 8) & 0x01) != 0)
             continue; // ignore truncated messages
         if (ntohs(dns->qdcount) != 1)
