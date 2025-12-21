@@ -57,9 +57,19 @@ rr2str(const uint8_t **ptrptr, const uint8_t *end) {
     const uint8_t *ptr = *ptrptr;
 
     while (1) {
+        if (ptr >= end)
+            break;
         l = ptr[0];
+
+        if ((l & 0xC0) == 0xC0) {
+            ptr += 2;
+            break;
+        }
+
         ptr++;
         if (l <= 0)
+            break;
+        if (ptr + l > end)
             break;
         if (dst > res)
             *dst++ = '.';
