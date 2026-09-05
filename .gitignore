@@ -1,0 +1,13 @@
+# Compiled binaries & objects
+dnsstream
+*.o
+*.so
+
+# Packet capture test files
+*.pcap
+*.cap
+
+# OS & Editor temp files
+.DS_Store
+*.swp
+*~
